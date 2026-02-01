@@ -9,7 +9,7 @@ public static class RandomExtension
     public static T PickRandom<T>(this IEnumerable<T> ienum) => ienum.ToArray().PickRandom();
 
 
-    public static float Range(Vector2 range) => Random.Range(range.x, range.y);
+    public static float RandomInRange(this Vector2 range) => Random.Range(range.x, range.y);
     
 
     public static Vector2 RandomVector2(float min, float max) => new Vector2(Random.Range(min, max), Random.Range(min, max));

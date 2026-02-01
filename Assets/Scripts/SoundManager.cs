@@ -1,16 +1,26 @@
+using System.Collections;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] AudioClip[] randomSounds;
+    [SerializeField] Vector2 dtRange = new Vector2(0, 3);
+
     void Start()
     {
-        
+        StartCoroutine(PlayRandomSoundsLoop());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    IEnumerator PlayRandomSoundsLoop()
+    {            
+        yield return new WaitForSeconds(1);
+
+        while (true)
+        {
+            yield return new WaitForSeconds(dtRange.RandomInRange());
+            AudioClip sound = randomSounds.PickRandom();
+            AudioExtension.Play(sound);
+            yield return new WaitForSeconds(sound.length);
+        }
     }
 }

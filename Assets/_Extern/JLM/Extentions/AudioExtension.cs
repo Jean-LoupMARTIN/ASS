@@ -4,12 +4,19 @@ using UnityEngine;
 
 public static class AudioExtension
 {
-    public static void Play(AudioClip clip)
+    public static AudioSource Play(AudioClip clip, float volume = 1, float pitch = 1)
     {
         if (!clip)
-            return;
-            
-        AudioSource.PlayClipAtPoint(clip, Vector3.zero);
+            return null;
+        
+        AudioSource audioSource = new GameObject("PlayClip").AddComponent<AudioSource>();
+        audioSource.clip = clip;
+        audioSource.spatialBlend = 0;
+        audioSource.volume = volume;
+        audioSource.pitch = pitch;
+        audioSource.Play();
+        Object.Destroy(audioSource.gameObject, clip.length);
+        return audioSource;
     }
 }
 

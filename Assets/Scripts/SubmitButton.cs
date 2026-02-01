@@ -13,6 +13,14 @@ public class SubmitButton : MonoBehaviour
         GetComponent<Button>().onClick.AddListener(Submit);
     }
 
+    void OnDisable()
+    {
+        foreach (ToggleButton c in conditions)
+            c.SetOn(false);
+
+        conditionsPopup.SetActive(false);
+    }
+
     public void Submit()
     {                
         conditionsPopup.SetActive(false);

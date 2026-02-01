@@ -39,7 +39,7 @@ public class WriteText : MonoBehaviour
 
             while (idx <= text.Length-1)
             {
-                yield return new WaitForSeconds(RandomExtension.Range(dtRange));
+                yield return new WaitForSeconds(dtRange.RandomInRange());
                 tmpText.text += text[idx];
                 idx++;
             }
@@ -51,7 +51,7 @@ public class WriteText : MonoBehaviour
 
             while (idx < lines.Length)
             {
-                yield return new WaitForSeconds(RandomExtension.Range(dtRange));
+                yield return new WaitForSeconds(dtRange.RandomInRange());
                 
                 if (idx > 0)
                     tmpText.text += '\n';

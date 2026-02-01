@@ -24,8 +24,8 @@ public class WindowsLoadingBar : Bar
 
         while (Progress < 1)
         {
-            yield return new WaitForSeconds(RandomExtension.Range(stepDtRange));
-            SetProgress(Progress + RandomExtension.Range(stepProgressRange));
+            yield return new WaitForSeconds(stepDtRange.RandomInRange());
+            SetProgress(Progress + stepProgressRange.RandomInRange());
         }
 
         AudioExtension.Play(endSound);
