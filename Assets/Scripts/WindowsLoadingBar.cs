@@ -5,7 +5,6 @@ public class WindowsLoadingBar : Bar
 {
     [SerializeField] Vector2 stepProgressRange = new Vector2(0.1f, 0.2f);
     [SerializeField] Vector2 stepDtRange = new Vector2(0.1f, 0.2f);
-    [SerializeField] AudioClip endSound;
     [SerializeField] float waitStart = 0.5f;
     [SerializeField] float waitEnd = 1;
     [SerializeField] GameObject desableOnEnd;
@@ -28,7 +27,7 @@ public class WindowsLoadingBar : Bar
             SetProgress(Progress + stepProgressRange.RandomInRange());
         }
 
-        AudioExtension.Play(endSound);
+        AudioExtension.Play(SoundManager.Instance.bootWindowsSound);
 
         yield return new WaitForSeconds(waitEnd); 
 

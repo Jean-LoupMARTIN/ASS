@@ -9,7 +9,7 @@ public class VDSuspectsSelection : Singleton<VDSuspectsSelection>
     [SerializeField] GameObject loadPicture;
     [SerializeField] Image pictureImage;
     [SerializeField] float loadPictureTime = 1;
-    int selectedIdx = -1;
+    [HideInInspector] public int selectedIdx = -1;
 
     protected override void Awake()
     {
@@ -24,6 +24,12 @@ public class VDSuspectsSelection : Singleton<VDSuspectsSelection>
         SelectIdx(-1);
     }
     
+    public void SetThumbnailsSprites(Sprite[] sprites)
+    {
+        for (int i = 0; i < thumbnailsImages.Length; i++)
+            thumbnailsImages[i].sprite = sprites[i];
+    }
+
     public void SelectIdx(int idx)
     {
         selectedIdx = idx;

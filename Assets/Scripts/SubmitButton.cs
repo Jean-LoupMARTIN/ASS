@@ -2,22 +2,22 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class SubmitButton : MonoBehaviour
+public class SubmitButton : Singleton<SubmitButton>
 {
     [SerializeField] ToggleButton[] conditions;
     [SerializeField] GameObject conditionsPopup;
+    [SerializeField] VSRapportResult rapportResult;
 
-    void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         conditionsPopup.SetActive(false);
         GetComponent<Button>().onClick.AddListener(Submit);
     }
 
     void OnDisable()
     {
-        foreach (ToggleButton c in conditions)
-            c.SetOn(false);
-
+        ResetConditions();
         conditionsPopup.SetActive(false);
     }
 
@@ -34,6 +34,15 @@ public class SubmitButton : MonoBehaviour
             }
         }
 
-        print("submit");
+        rapportResult.gameObject.SetActive(true);
+        rapportResult.SetResult(VDSuspectsSelection.Instance.selectedIdx == VigilenceDirect.Instance.crtLevel.answer);
+    }
+
+    public void ResetConditions()
+    {
+        foreach (ToggleButton c in conditions)
+            c.SetOn(false);
+
+        conditionsPopup.SetActive(false);
     }
 }

@@ -6,7 +6,10 @@ public static class AudioExtension
 {
     public static AudioSource Play(AudioClip clip, float volume = 1, float pitch = 1)
     {
-        if (!clip)
+        pitch = Mathf.Clamp(pitch, 0, 3);
+        volume = Mathf.Clamp(volume, 0, 1);
+
+        if (!clip || pitch == 0)
             return null;
         
         AudioSource audioSource = new GameObject("PlayClip").AddComponent<AudioSource>();
@@ -15,7 +18,7 @@ public static class AudioExtension
         audioSource.volume = volume;
         audioSource.pitch = pitch;
         audioSource.Play();
-        Object.Destroy(audioSource.gameObject, clip.length);
+        Object.Destroy(audioSource.gameObject, clip.length / pitch);
         return audioSource;
     }
 }

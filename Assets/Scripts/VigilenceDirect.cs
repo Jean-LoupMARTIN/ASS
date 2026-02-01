@@ -1,15 +1,17 @@
 using System;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 
 [DefaultExecutionOrder(100)]
 public class VigilenceDirect : Singleton<VigilenceDirect>
 {
-    [SerializeField] Level[] levels;
-
+    [SerializeField] WriteText wantedNoticeDescription;
+    public Level[] levels;
     VDLoading loading;
-    
+
     [HideInInspector] public Level crtLevel = null;
     [HideInInspector] public int crtLevelIdx = -1;
 
@@ -26,99 +28,33 @@ public class VigilenceDirect : Singleton<VigilenceDirect>
         else                   SetLevel(crtLevel);
     }
 
+    void OnDisable()
+    {
+        wantedNoticeDescription.tmpText.text = "Description...";
+    }
+
     public void SetLevel(Level level)
     {
         crtLevel = level;
         crtLevelIdx = levels.IndexOf(level);
 
+        SoundManager.Instance.MatchCrtLevel();
+        SubmitButton.Instance.ResetConditions();
         loading.StartLoading();
+        VDSuspectsSelection.Instance.SetThumbnailsSprites(crtLevel.suspects.Select((s) => s.thumbnail).ToArray());
         VDSuspectsSelection.Instance.SelectIdx(0);
-        
-        // // wanted notice
-        // wantedImage.sprite = crtLevel.wantedNotice.sprite;
-        // wantedDescription.StartWriting(crtLevel.wantedNotice.description);
-
-        // // suspects
-        // for (int i = 0; i < selectSuspectButtons.Length; i++)
-        //     selectSuspectButtons[i].icon.sprite = level.suspects[i].icon;
-
-        // SelectSuspect(level.suspects[0]);
+        wantedNoticeDescription.StartWriting(crtLevel.wantedNotice);
     }
     public void SetLevel(int levelIdx) => SetLevel(levels[levelIdx]);
 
-
-    // [SerializeField] WriteText loadingWriteText;
-    // [SerializeField] Image wantedImage;
-    // [SerializeField] WriteText wantedDescription;
-    // [SerializeField] SelectSuspectButton[] selectSuspectButtons;
-    // [SerializeField] Image suspectPicture;
-    
-    // int selectedSuspectIdx = -1;
-    // Suspect selectedSuspect = null;
-
-    // protected override void Awake()
-    // {
-    //     base.Awake();
-
-    //     for (int i = 0; i < selectSuspectButtons.Length; i++)
-    //         selectSuspectButtons[i].idx = i;
-
-    // }
-
-    // void OnEnable()
-    // {
-    //     SetLevel(levels[0]);
-    // }
-
-    
-    // public void NextLevel()
-    // {
-    //     crtLevelIdx++;
-    //     crtLevelIdx = Mathf.Min(crtLevelIdx, levels.Length-1);
-    //     SetLevel(crtLevelIdx);
-    // }
-
-    // public void SelectSuspect(Suspect suspect)
-    // {
-    //     selectedSuspect = suspect;
-    //     selectedSuspectIdx = crtLevel.suspects.IndexOf(suspect);
-
-    //     for (int i = 0; i < selectSuspectButtons.Length; i++)
-    //         selectSuspectButtons[i].SetSelected(i == selectedSuspectIdx);
-
-    //     suspectPicture.sprite = suspect.picture;
-    // }
-    // public void SelectSuspect(int suspectIdx) => SelectSuspect(crtLevel.suspects[suspectIdx]);
-
-    // public void SwipSuspect(bool left)
-    // {
-    //     selectedSuspectIdx = left ? selectedSuspectIdx - 1 + crtLevel.suspects.Length : 
-    //                                 selectedSuspectIdx + 1;
-
-    //     selectedSuspectIdx %= crtLevel.suspects.Length;
-
-    //     SelectSuspect(selectedSuspectIdx);
-    // }
-
-    // public void ConfirmSelectedSuspect()
-    // {
-    //     if (selectedSuspectIdx == crtLevel.answer)
-    //     {
-    //         print("Yes !!!");
-    //         NextLevel();
-    //     }
-
-    //     else {
-    //         print("No...");
-    //     }
-    // }
+    public void NextLevel() => SetLevel(Mathf.Min(crtLevelIdx+1, levels.Length-1));
 }
 
 [Serializable]
 public class Level
 {
     public Suspect[] suspects;
-    public wantedNotice wantedNotice;
+    [TextArea] public string wantedNotice;
     public int answer = 0;
 }
 
@@ -126,14 +62,6 @@ public class Level
 [Serializable]
 public class Suspect
 {
-    public Sprite icon;
+    public Sprite thumbnail;
     public Sprite picture;
-    //[TextArea] public string description = "";
-}
-
-[Serializable]
-public class wantedNotice
-{
-    public Sprite sprite;
-    [TextArea] public string description;
 }

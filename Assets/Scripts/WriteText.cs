@@ -12,9 +12,8 @@ public class WriteText : MonoBehaviour
     }
 
     [SerializeField] Vector2 dtRange = new Vector2(0f, 0.1f);
-    TMP_Text tmpText;
+    [HideInInspector] public TMP_Text tmpText;
 
-    [SerializeField, TextArea] string text;
 
     void Awake()
     {
@@ -27,38 +26,44 @@ public class WriteText : MonoBehaviour
         StartCoroutine(Write(text));
     }
 
-    public void StartWriting() => StartWriting(text);
 
     IEnumerator Write(string text)
     {
         tmpText.text = "";
+        int i = 0;
+        float t = 0;
 
         if (mode == WriteMode.Char)
         {
-            int idx = 0;
-
-            while (idx <= text.Length-1)
-            {
-                yield return new WaitForSeconds(dtRange.RandomInRange());
-                tmpText.text += text[idx];
-                idx++;
+            while (i < text.Length)
+            {   
+                yield return new WaitForEndOfFrame();
+                t += Time.deltaTime;
+                
+                while (t > 0 && i < text.Length)
+                {
+                    t -= dtRange.RandomInRange();
+                    tmpText.text += text[i];
+                    i++;
+                }
             }
         }
 
         else {
             string[] lines = text.Split('\n');
-            int idx = 0;
-
-            while (idx < lines.Length)
+            
+            while (i < lines.Length)
             {
-                yield return new WaitForSeconds(dtRange.RandomInRange());
+                yield return new WaitForEndOfFrame();
+                t += Time.deltaTime;
                 
-                if (idx > 0)
-                    tmpText.text += '\n';
-                
-                tmpText.text += lines[idx];
-                
-                idx++;
+                while (t > 0 && i < lines.Length)
+                {
+                    t -= dtRange.RandomInRange();
+                    if (i > 0) tmpText.text += '\n';
+                    tmpText.text += lines[i];
+                    i++;
+                }
             }
         }
     }
