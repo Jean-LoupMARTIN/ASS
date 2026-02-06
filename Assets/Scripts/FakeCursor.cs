@@ -4,10 +4,15 @@ public class FakeCursor : Singleton<FakeCursor>
 {
     [SerializeField] Vector2 maxPosition = new Vector2(700, 525);
 
-    void Start()
-    {
-        Cursor.visible = false;
-    }
+    // void OnEnabled()
+    // {
+    //     Cursor.visible = false;
+    // }
+
+    // void OnDesabled()
+    // {
+    //     Cursor.visible = true;
+    // }
 
     void OnApplicationFocus(bool hasFocus)
     {
